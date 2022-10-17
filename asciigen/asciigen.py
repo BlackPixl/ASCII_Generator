@@ -17,8 +17,9 @@ def arguments():
 	}
 
 
-def resize_image():
-	pass
+def resize_image(image):
+	new_image = image.resize((int(image.width*0.5), int(image.height*0.3)))
+	return new_image
 
 def color_to_grayscale(image):
 	grayscale = image.convert('L')
@@ -27,7 +28,8 @@ def color_to_grayscale(image):
 def img_to_ascii(image):
 	ascii_characters = '@#$S%?*+;:,.'
 	image_pixels = image.getdata()
-	return image_pixels
+	image_ascii = "".join([ascii_characters[pixel//21] for pixel in image_pixels])
+	return image_ascii
 
 def main():
 	args = arguments()
@@ -39,7 +41,18 @@ def main():
 		return 1
 
 	print('Welcome to asciigen. \ninput image: %s'% (input_path))
+	WIDTH = img.width
+	HEIGHT = img.height
+	print(WIDTH)
+	print(HEIGHT)
+	img = resize_image(img)
 	grayscale_image = color_to_grayscale(img)
 	ascii_image = img_to_ascii(grayscale_image)
-	print(ascii_image)
+	count = 0
+	for i in range(len(ascii_image)):
+		count += 1
+		print(ascii_image[i], end='')
+		if count == img.width:
+			count = 0
+			print('\n', end='')
 	return 0
